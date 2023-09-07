@@ -1,0 +1,29 @@
+import socket
+
+PORT = 5050
+SERVER = "127.0.1.1"
+ADDR = (SERVER, PORT)
+FORMAT = 'utf-8'
+DISCONNECT_MESSAGE = "!DISCONNECT"
+HEADER = 64
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+try:
+    client.connect(ADDR)
+except ConnectionRefusedError:
+    print("Bağlantı hatası: Sunucu bağlantısı reddetti. Sunucunun çalıştığından emin olun.")
+except Exception as e:
+    print(f"Bağlantı hatası: {e}")
+
+def send(msg):
+    message = msg.encode(FORMAT)
+    msg_length = len(message)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (HEADER - len(send_length))
+    client.send(send_length)
+    client.send(message)
+
+send("Salam Huseyin Qehibesi")  # İstemciye göndermek istediğiniz mesajı burada belirtin
+
+print("Mesaj gönderildi.")
